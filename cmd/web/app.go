@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/alexedwards/scs/v2"
+	"github.com/dvinubius/golang-subscription-app/cmd/web/mailer"
 	"github.com/dvinubius/golang-subscription-app/data"
 )
 
@@ -16,7 +17,7 @@ type App struct {
 	ErrorLog    *log.Logger
 	Wait        *sync.WaitGroup
 	Models      data.Models
-	Mailer      *Mailer
+	Mailer      *mailer.Mailer
 	ErrorCh     chan error
 	ErrorDoneCh chan bool
 }

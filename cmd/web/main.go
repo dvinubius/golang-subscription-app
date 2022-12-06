@@ -9,6 +9,7 @@ import (
 	"sync"
 	"syscall"
 
+	"github.com/dvinubius/golang-subscription-app/cmd/web/mailer"
 	"github.com/dvinubius/golang-subscription-app/data"
 )
 
@@ -40,7 +41,7 @@ func main() {
 	}
 
 	// mail
-	app.createMailer()
+	app.Mailer = mailer.NewMailer(app.Wait)
 	go app.runMailer()
 
 	// listen for signals
