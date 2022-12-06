@@ -1,0 +1,26 @@
+{{template "base" .}}
+
+{{define "content" }}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="mt-5">Home</h1>
+                <hr>
+                {{if eq .Authenticated false}}
+                <a class="btn btn-outline-secondary" href="/login">Login</a>
+                <a class="btn btn-outline-secondary" href="/register">Register</a>
+                {{end}}
+                {{if .Authenticated}}
+                    <h1 class="mt-4">Hi, {{.User.FirstName}}!</h1>
+                {{end}}
+            </div>
+
+        </div>
+    </div>
+{{end}}
+
+{{define "js"}}
+    <script>
+
+    </script>
+{{end}}
