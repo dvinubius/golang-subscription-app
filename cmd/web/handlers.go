@@ -43,7 +43,7 @@ func (app *App) PostLoginPage(w http.ResponseWriter, r *http.Request) {
 		respInvalid()
 		return
 	}
-	validPassword, err := app.Models.User.PasswordMatches(password)
+	validPassword, err := app.Models.User.PasswordMatches(user, password)
 	if err != nil {
 		respInvalid()
 		return
@@ -96,7 +96,7 @@ func (app *App) PostRegisterPage(w http.ResponseWriter, r *http.Request) {
 		IsAdmin:   0,
 	}
 
-	_, err = app.Models.User.Insert(u)
+	_, err = app.Models.User.Insert(&u)
 	if err != nil {
 		app.Session.Put(r.Context(), "error", "Unable to create user")
 		http.Redirect(w, r, "/register", http.StatusSeeOther)

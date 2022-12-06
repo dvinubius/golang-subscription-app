@@ -1,20 +1,28 @@
 # Subscription Web App in Go
 
-Fullstack Web App in Go showcasing basic flows like 
-- register (confirmation email)
-- login
-- logout
-- manage subscription
-  - view available plans
-  - purchase a plan (invoice email & purchased content email)
+> Fullstack Web App in Go showcasing basic flows like 
+> - register user (w/ confirmation email)
+> - login user
+> - logout user 
+> - manage a subscription
+>   - view available plans
+>   - purchase a plan (w/ invoice email & purchased content email)
 
-## Demonstrates go concurrency. 
+## Demonstrates go concurrency
 Go routines are used for
 - send confirmation emails
 - send invoice emails
 - create custom purchased content (pdf file) & send via email
 
-Showcasing **graceful shutdown** given pending actions via channels
+Showcases **graceful shutdown** given pending actions via channels
+
+## Inspiration
+This app was created along the lines of the Udemy Course called "Working With Concurrency in Go".
+
+A few architectural and stylistic improvements were made:
+- data models are just data models, not to be abused as receivers of db-query functionality
+- regrouping of functionality
+- more appropriate names
 
 # Ops
 - Docker setup w/ **Postgres**, **Mailhog**, **Redis** 
@@ -37,12 +45,10 @@ Showcasing **graceful shutdown** given pending actions via channels
       - mailer level: `mailer.ErrroCh` and `mailer.ErrorDoneCh`
   
   - DB
-      - setup - explicit sequence definitions, pg.catalog, …
+      - setup with explicit sequence definitions, pg.catalog, …
       - Models
           - **no gorm**, plain sql queries & custom defined models
-          - db operation on table as method on model struct
-          - **empty struct pattern** for entry-independent queries (`app.Models.User.getAll()` is a function call on receiver `data.User{}`)
-
+          - db operations on tables as functions on modelConnectors : special purpose receivers (`DBUsers` and `DBPlans`)
 # Tests
 
 A few patterns for testing
@@ -52,7 +58,7 @@ A few patterns for testing
 - handlers
 
 ## Data Models
-As opposed to using the repository Pattern, handler tests are use custom testmodels (db independent) which reflect the production models. Quite a lot of duplicated code, not optimal.
+As opposed to using the repository Pattern, handler tests use custom test modelConnectors (db independent) which replicate the interface of the production models. Quite a lot of duplicated code, expensive to maintain, not optimal. Definitely preferring repository model
 
 # Todo
 

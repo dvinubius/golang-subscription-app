@@ -17,7 +17,9 @@ type Plan struct {
 	UpdatedAt           time.Time
 }
 
-func (p *Plan) GetAll() ([]*Plan, error) {
+type DBPlans struct{}
+
+func (dbp *DBPlans) GetAll() ([]*Plan, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
@@ -42,7 +44,7 @@ func (p *Plan) GetAll() ([]*Plan, error) {
 			&plan.UpdatedAt,
 		)
 
-		plan.PlanAmountFormatted = plan.AmountForDisplay()
+		plan.PlanAmountFormatted = dbp.AmountForDisplay(&plan)
 		if err != nil {
 			log.Println("Error scanning", err)
 			return nil, err
@@ -55,7 +57,7 @@ func (p *Plan) GetAll() ([]*Plan, error) {
 }
 
 // GetOne returns one plan by id
-func (p *Plan) GetOne(id int) (*Plan, error) {
+func (dbp *DBPlans) GetOne(id int) (*Plan, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
@@ -76,14 +78,14 @@ func (p *Plan) GetOne(id int) (*Plan, error) {
 		return nil, err
 	}
 
-	plan.PlanAmountFormatted = plan.AmountForDisplay()
+	plan.PlanAmountFormatted = dbp.AmountForDisplay(&plan)
 
 	return &plan, nil
 }
 
 // SubscribeUserToPlan subscribes a user to one plan by insert
 // values into user_plans table
-func (p *Plan) SubscribeUserToPlan(user User, plan Plan) error {
+func (dbp *DBPlans) SubscribeUserToPlan(user User, plan Plan) error {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
@@ -106,7 +108,7 @@ func (p *Plan) SubscribeUserToPlan(user User, plan Plan) error {
 }
 
 // AmountForDisplay formats the price we have in the DB as a currency string
-func (p *Plan) AmountForDisplay() string {
+func (dbp *DBPlans) AmountForDisplay(p *Plan) string {
 	amount := float64(p.PlanAmount) / 100.0
 	return fmt.Sprintf("$%.2f", amount)
 }

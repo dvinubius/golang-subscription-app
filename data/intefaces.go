@@ -1,19 +1,19 @@
 package data
 
-type UserInterface interface {
+type DBUsersInterface interface {
 	GetAll() ([]*User, error)
 	GetByEmail(email string) (*User, error)
 	GetOne(id int) (*User, error)
 	Update(*User) error
-	Delete() error
-	Insert(user User) (int, error)
-	ResetPassword(password string) error
-	PasswordMatches(plainText string) (bool, error)
+	Delete(*User) error
+	Insert(*User) (int, error)
+	ResetPassword(*User, string) error
+	PasswordMatches(*User, string) (bool, error)
 }
 
-type PlanInterface interface {
+type DBPlansInterface interface {
 	GetAll() ([]*Plan, error)
 	GetOne(id int) (*Plan, error)
 	SubscribeUserToPlan(user User, plan Plan) error
-	AmountForDisplay() string
+	AmountForDisplay(*Plan) string
 }
